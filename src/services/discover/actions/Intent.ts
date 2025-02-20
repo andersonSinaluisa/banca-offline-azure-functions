@@ -3,7 +3,7 @@
 export class Intent {
 
     knowledge: string;
-    action: (parameters: any) => any;
+    action: (parameters: any) => Promise<any>;
     
     constructor(knowledge: string, action
         : (parameters: any) => any){
@@ -12,10 +12,11 @@ export class Intent {
     }
 
     
-    process(
+    async process(
         parameters: any
     ){
-        return this.action(parameters);
+        const res = await this.action(parameters);
+        return res;
     }
     
 

@@ -9,9 +9,9 @@ async function isValidAuth(authHeader: string) {
     const vault = new CrendentialVaul();
     const userhook = await vault.userhook;
     const passwordhook = await vault.passwordhook;
-    console.log(userhook
-        , passwordhook);
-        console.log(username, password);
+    console.log(
+        `username: ${username}, password: ${password}, userhook: ${userhook}, passwordhook: ${passwordhook}`
+    );
     return username === userhook && password === passwordhook;
 }
 /**
@@ -19,29 +19,23 @@ async function isValidAuth(authHeader: string) {
  */
 export async function authMiddleware(
     req: HttpRequest,
-    context: InvocationContext,
-    next: () => Promise<HttpResponseInit>
 ) {
     const authHeader = req.headers.get('authorization');
     if (!authHeader) {
-        context.error('Unauthorized');
-        return { status: 401, body: 'Unauthorized' };
+        throw new Error('Unauthorized');
     }
 
 
     try{
         const _isValidAuth = await isValidAuth(authHeader);
         if (!authHeader || !_isValidAuth) {
-            context.error('Unauthorized');
-            return { status: 401, body: 'Unauthorized' };
+           throw new Error('Unauthorized');
         }
     }catch(e){
-        console.log(e);
-        context.error('Unauthorized');
-        return { status: 401, body: 'Unauthorized' };
+        throw new Error('Unauthorized');
     }
     
 
 
-    await next(); // Llamar a la función si la autenticación es válida
+    return true;
 }

@@ -9,6 +9,8 @@ import { InfoBipClient } from "../configuration/InfobipClient";
 async function receive_whatsapp_hook(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     
     try{
+
+       
         const data = await request.json();
         console.log(data);
         if (!data || typeof data !== "object") {
@@ -25,36 +27,36 @@ async function receive_whatsapp_hook(request: HttpRequest, context: InvocationCo
         )
         const discoverIntent = new DiscoverIntent(data as MessageWhatsappTextReceive, availableIntent);
 
-        discoverIntent.process();
+        const resultPromise = await discoverIntent.process()
 
 
+        const res =  resultPromise
+        console.log(res);
         return {
             status: 200,
-            body: "Mensaje recibido"
+            jsonBody: res
         };
     }catch(e){
-        console.log(e);
+        context.error(e);
         return {
             status: 500,
-            body: "Error interno"
+            jsonBody:{
+                status: 500,
+                body: "Ocurrió un error"
+            }
+
         };
     }
 
     
 };
 
-export async function processRequest(req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
-    console.log('Iniciando middleware');
-    const res = await authMiddleware(req, context, async () => {
-        console.log('Middleware pasado, ejecutando función principal');
-        return await receive_whatsapp_hook(req, context);
-    });
-    return res;
-}
+// Middleware que envuelve la lógica de la función principal
 
 
+// Configuración de la ruta en app.http
 app.http('receive_whatsapp_hook', {
     methods: ['POST'],
-    authLevel: 'anonymous',
-    handler: processRequest
-});
+    authLevel: 'anonymous',  // Asegúrate de que este nivel de autorización sea correcto
+    handler: receive_whatsapp_hook,  // Usa el middleware en lugar del handler directo
+})

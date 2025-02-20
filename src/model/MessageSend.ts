@@ -6,4 +6,5 @@ export interface MessageSend{
     content: {
         text: string;
     };
+    type: string;
 }

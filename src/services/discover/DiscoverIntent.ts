@@ -19,7 +19,7 @@ export class DiscoverIntent{
     }
 
 
-    process(){
+    async process(){
 
         const text = this.message.results[0].message.text;
         const words = text.split(" ");
@@ -27,7 +27,8 @@ export class DiscoverIntent{
             words.find(word => intent.keys.includes(word))
         ));
         if(intent){
-            return intent.intent.process(this.message);
+            const res = await intent.intent.process(this.message);
+            return res;
         }
         return null;
     }

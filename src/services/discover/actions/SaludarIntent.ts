@@ -8,15 +8,18 @@ export class SaludarIntent extends Intent{
     messageService: MessageService;
 
     constructor(messageService:MessageService){
-        const run = (parameters:any) => { this.run(parameters) };
+        const run = async(parameters:any) => {
+            
+           return await this.run(parameters) 
+        
+        };
         super("saludar",run);
         this.messageService = messageService;
 
     }
 
 
-    run(parameters:any){
-        console.log("SaludarIntent",parameters);
+    async run(parameters:any){
         const { results } = parameters;
         if (!results) {
             return;
@@ -24,13 +27,16 @@ export class SaludarIntent extends Intent{
         if (results.length === 0) {
             return;
         }
-        const { from, to } = results[0].message;
-        this.messageService.sendMessage({
+        const { from, to } = results[0];
+        const res = await this.messageService.sendMessage({
             from: from,
             to: to,
             content: {
                 text: "Hola, ¿en qué puedo ayudarte?"
-            }
+            },
+            type: "text"
         });
+        
+        return res;
     }
 }

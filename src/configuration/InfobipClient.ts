@@ -13,8 +13,8 @@ export class InfoBipClient {
             return this.infobip;
         }
 
-        let apiKey = await this.vault.infobipBaseUrl;
-        let baseUrl = await this.vault.infobipApiKey;
+        let apiKey = await this.vault.infobipApiKey;
+        let baseUrl = await this.vault.infobipBaseUrl;
 
         this.infobip = new Infobip({
             baseUrl: baseUrl,
@@ -27,8 +27,3 @@ export class InfoBipClient {
 
 }
 
-let infobip = new Infobip({
-    baseUrl: "YOUR_BASE_URL",
-    apiKey: "YOUR_API_KEY",
-    authType: AuthType.ApiKey,
-});
