@@ -6,7 +6,7 @@ import { SaludarIntent } from "../actions/SaludarIntent";
 export interface AvailableIntents {
     getAvailableIntents(): {
         keys: string[],
-        intent: Intent
+        intent: Intent,
     }[]
 }
 

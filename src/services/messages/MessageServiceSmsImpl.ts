@@ -7,7 +7,13 @@ export class MessageServiceSmsImpl implements MessageService{
     constructor(private infobip: Infobip) {
 
     }
-    receiveMessage(message: MessageSend): void {
+    saveReceivedMessage(message: any): Promise<any> {
+        throw new Error("Method not implemented.");
+    }
+    saveSentMessage(message: any): Promise<any> {
+        throw new Error("Method not implemented.");
+    }
+    async receiveMessage(message: MessageSend) {
         throw new Error("Method not implemented.");
     }
     sendMessage(message: MessageSend){

@@ -5,14 +5,20 @@ import { authMiddleware } from "../middleware/auth-middleware";
 import { MessageWhatsappTextReceive } from "../model/whatsapp/MessageWhatsappTextReceive";
 import { AvailableIntentsWhatsapp } from "../services/discover/availableIntents/AvailableIntentsWhatsapp";
 import { InfoBipClient } from "../configuration/InfobipClient";
+import { mongo } from "../configuration/MongoClient";
 
 async function receive_whatsapp_hook(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
-    
-    try{
 
-       
+    try {
+
+        /*const isAuth = await authMiddleware(request);
+        if(!isAuth){
+            return {
+                status: 401,
+                body: "No autorizado"
+            }
+        }*/
         const data = await request.json();
-        console.log(data);
         if (!data || typeof data !== "object") {
             return { status: 400, body: "El cuerpo debe ser un JSON válido" };
 
@@ -30,17 +36,17 @@ async function receive_whatsapp_hook(request: HttpRequest, context: InvocationCo
         const resultPromise = await discoverIntent.process()
 
 
-        const res =  resultPromise
-        console.log(res);
+        const res = resultPromise
+        
         return {
             status: 200,
             jsonBody: res
         };
-    }catch(e){
+    } catch (e) {
         context.error(e);
         return {
             status: 500,
-            jsonBody:{
+            jsonBody: {
                 status: 500,
                 body: "Ocurrió un error"
             }
@@ -48,7 +54,7 @@ async function receive_whatsapp_hook(request: HttpRequest, context: InvocationCo
         };
     }
 
-    
+
 };
 
 // Middleware que envuelve la lógica de la función principal
@@ -58,5 +64,7 @@ async function receive_whatsapp_hook(request: HttpRequest, context: InvocationCo
 app.http('receive_whatsapp_hook', {
     methods: ['POST'],
     authLevel: 'anonymous',  // Asegúrate de que este nivel de autorización sea correcto
-    handler: receive_whatsapp_hook,  // Usa el middleware en lugar del handler directo
+    handler: receive_whatsapp_hook, 
+    
+     // Usa el middleware en lugar del handler directo
 })

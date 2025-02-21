@@ -1,3 +1,4 @@
+import { title } from "process";
 import { MessageService } from "../../messages/MessageService";
 import { Intent } from "./Intent";
 
@@ -28,15 +29,49 @@ export class SaludarIntent extends Intent{
             return;
         }
         const { from, to } = results[0];
+        this.messageService.saveReceivedMessage(parameters);
+        //enviar mensaje con opciones
         const res = await this.messageService.sendMessage({
-            from: from,
-            to: to,
+            from: to,
+            to: from,
             content: {
-                text: "Hola, ¿en qué puedo ayudarte?"
+                body: {
+                    text: "Hola, ¿Cómo puedo ayudarte?"
+                },
+                action: {
+                   title: "escoge una opción",
+                    sections: [
+                        {
+                            rows: [
+                                {
+                                    id:"horario_atencion",
+                                    title: "horario de atención"
+                                },
+                                {
+                                    id: "consultar_saldo",
+                                    title: "consultar saldo"
+                                },
+                                {
+                                    id: "realizar_pago",
+                                    title: "realizar pago"
+                                },
+                                {
+                                    id: "ver_ultimos_movimientos",
+                                    title: "ver últimos movimientos"
+                                },
+                                {
+                                    id: "ver_sucursales",
+                                    title: "ver sucursales"
+                                }
+                            ]
+                        }
+                    ]
+                }
             },
-            type: "text"
+            type: "interactive-list"
         });
-        
+        this.messageService.saveSentMessage(res);
+
         return res;
     }
 }
