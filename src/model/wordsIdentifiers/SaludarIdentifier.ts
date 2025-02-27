@@ -35,4 +35,5 @@ export const SaludarIdentifier = [
     "cómo estás vos",
     "cómo estás vos",
     "cómo estás vos",
+    "buen día"
 ]

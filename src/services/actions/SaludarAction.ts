@@ -1,21 +1,22 @@
 import { title } from "process";
-import { MessageService } from "../../messages/MessageService";
-import { Intent } from "./Intent";
+import { MessageService } from "../messages/MessageService";
+import { Intent } from "../../model/Intent";
+import { SaludarIdentifier } from "../../model/wordsIdentifiers/SaludarIdentifier";
+import { Action } from "../../model/Action";
 
 
 
-export class SaludarIntent extends Intent{
+export class SaludarAction extends Action{
 
     messageService: MessageService;
 
-    constructor(messageService:MessageService){
+    constructor(){
         const run = async(parameters:any) => {
             
            return await this.run(parameters) 
         
         };
         super("saludar",run);
-        this.messageService = messageService;
 
     }
 
@@ -29,9 +30,8 @@ export class SaludarIntent extends Intent{
             return;
         }
         const { from, to } = results[0];
-        this.messageService.saveReceivedMessage(parameters);
         //enviar mensaje con opciones
-        const res = await this.messageService.sendMessage({
+        const res = {
             from: to,
             to: from,
             content: {
@@ -69,8 +69,7 @@ export class SaludarIntent extends Intent{
                 }
             },
             type: "interactive-list"
-        });
-        this.messageService.saveSentMessage(res);
+        }
 
         return res;
     }
